@@ -79,11 +79,11 @@ class Reader:
                 grams.append(term[index:index+self.n])
                 index += 1
 
-        return grams
+        return id, grams
 
 
 sample = Reader("training-tweets.txt", 1, 3)
-print(sample.next())
-print(sample.next())
-print(sample.next())
+while sample.has_next():
+    print(sample.next())
+
 
