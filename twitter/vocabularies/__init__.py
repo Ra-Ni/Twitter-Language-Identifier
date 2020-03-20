@@ -3,12 +3,14 @@ from .alpha import *
 from .lower import *
 from .lower_upper import *
 from .printable import *
+from .no_filter import *
 
 __registry = {
     0: LowerVocabulary,
     1: LowerUpperVocabulary,
     2: AlphaVocabulary,
-    3: PrintableVocabulary
+    3: PrintableVocabulary,
+    4: NoFilterVocabulary
 }
 
 
