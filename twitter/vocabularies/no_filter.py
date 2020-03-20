@@ -13,7 +13,7 @@ class NoFilterVocabulary(Vocabulary):
         return True
 
     def __len__(self) -> int:
-        return 16 * 2 ** 17
+        return 16 * 2 ** 17 - 2
 
     def __str__(self):
         return '4'

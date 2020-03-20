@@ -5,7 +5,7 @@ from envs import CorpusController
 if __name__ == '__main__':
     vocabulary_type = 4
     ngram_size = 1
-    smoothing_value = 0.00000000001
+    smoothing_value = 0.01
 
     vocabulary = vocabularies.make(vocabulary_type, ngram_size)
     twitter_database = CorpusController(len(vocabulary), smoothing_value, 'eu', 'ca', 'gl', 'es', 'en', 'pt')

@@ -36,15 +36,12 @@ class Vocabulary(ABC):
                 yield new_item
             del buffer[0]
 
-    def pre_process(self, item):
-        return sub('[\r\n]+', '', item)
-
     def load(self, target):
 
         with open(target, 'r') as reader:
 
             for line in reader:
-                new_line = self.pre_process(line)
+                new_line = sub('[\r\n]+', '', line)
 
                 if new_line:
                     post_id, user, language, post = tuple(new_line.split('\t'))
