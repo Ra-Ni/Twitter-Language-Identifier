@@ -6,7 +6,7 @@ from itertools import tee
 class Corpus:
     __global_count = 0.0
 
-    def __init__(self, size=0, smoothing_value=0, label=None):
+    def __init__(self, size=0, smoothing_value=0.1, label=None):
         self.size = size
         self.smoothing_value = smoothing_value
         self.label = label
@@ -43,6 +43,7 @@ class Corpus:
 
         results = self.local_score
         for item in iterator:
+            # todo need to fix this, no smoothing value for non-existing vocabs (not accepted)
             results += log((self.smoothing_value + self.frequencies.get(item, 0)) / self.local_count, 10)
 
         return results
@@ -75,8 +76,7 @@ class CorpusController:
     def classify(self, iterator):
         copies = iter(tee(iterator, len(self.corpora)))
         probabilities = [(corpus.score(next(copies)), label) for label, corpus in self.corpora.items()]
-        score, predicted_label = max(probabilities)
-        return score, predicted_label
+        return max(probabilities)
 
     def save(self, target):
         with open(target, 'w') as writer:
