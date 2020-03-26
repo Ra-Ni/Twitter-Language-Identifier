@@ -4,7 +4,7 @@ import string
 from vocabularies import Vocabulary
 
 
-class Custom(Vocabulary):
+class CustomVocabulary(Vocabulary):
 
     def __init__(self, window_size=1):
         super().__init__(window_size)
@@ -24,13 +24,13 @@ class Custom(Vocabulary):
                     self.__pattern[char] = 1
 
     def accepts(self, item) -> bool:
-        if self.__patern[item] is 1:
+        if self.__pattern[item] is 1:
             return True
         else:
             return False
 
     def __len__(self) -> int:
-        return len(self.__patern)
+        return len(self.__pattern)
 
     def __str__(self):
         return '0'
