@@ -22,10 +22,10 @@ class CustomVocabulary(Vocabulary):
                 self.__pattern.setdefault(item, 1)
 
     def accepts(self, item) -> bool:
-        return item in self.__pattern
+        return all(sub_item in self.__pattern for sub_item in item)
 
     def __len__(self) -> int:
         return len(self.__pattern)
 
     def __str__(self):
-        return '0'
+        return '5'

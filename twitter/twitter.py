@@ -4,7 +4,7 @@ from envs import CorpusController
 
 if __name__ == '__main__':
     vocabulary_type = 5
-    ngram_size = 3
+    ngram_size = 2
     smoothing_value = 0.01
 
     vocabulary = vocabularies.make(vocabulary_type, ngram_size)
