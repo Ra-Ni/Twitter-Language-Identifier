@@ -17,17 +17,12 @@ class CustomVocabulary(Vocabulary):
         }
 
         self.__pattern = dict.fromkeys(list(string.ascii_letters), 1)
-        for key in languages:
-            print(languages[key])
-            for char in languages[key]:
-                if self.__pattern.get(char) is None:
-                    self.__pattern[char] = 1
+        for values_list in languages.values():
+            for item in values_list:
+                self.__pattern.setdefault(item, 1)
 
     def accepts(self, item) -> bool:
-        if self.__pattern[item] is 1:
-            return True
-        else:
-            return False
+        return item in self.__pattern
 
     def __len__(self) -> int:
         return len(self.__pattern)

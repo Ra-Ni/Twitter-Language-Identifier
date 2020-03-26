@@ -3,7 +3,7 @@ from agents import Evaluator, Trainer
 from envs import CorpusController
 
 if __name__ == '__main__':
-    vocabulary_type = 2
+    vocabulary_type = 5
     ngram_size = 3
     smoothing_value = 0.01
 
