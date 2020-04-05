@@ -3,9 +3,9 @@ from agents import Evaluator, Trainer
 from envs import CorpusController
 
 if __name__ == '__main__':
-    vocabulary_type = 5
+    vocabulary_type = 2
     ngram_size = 2
-    smoothing_value = 0.01
+    smoothing_value = 0.3
 
     vocabulary = vocabularies.make(vocabulary_type, ngram_size)
     twitter_database = CorpusController(len(vocabulary) ** ngram_size, smoothing_value, 'eu', 'ca', 'gl', 'es', 'en', 'pt')

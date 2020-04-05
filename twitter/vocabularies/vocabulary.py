@@ -38,7 +38,7 @@ class Vocabulary(ABC):
 
     def load(self, target):
 
-        with open(target, 'r') as reader:
+        with open(target, 'r', encoding='utf8') as reader:
 
             for line in reader:
                 new_line = sub('[\r\n]+', '', line)

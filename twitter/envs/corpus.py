@@ -1,4 +1,4 @@
-from math import log
+from math import log10
 
 from itertools import tee
 
@@ -6,16 +6,14 @@ from itertools import tee
 class Corpus:
     __global_count = 0.0
 
-    def __init__(self, size=0, smoothing_value=0.1, label=None):
+    def __init__(self, size, smoothing_value, label):
         self.size = size
         self.smoothing_value = smoothing_value
         self.label = label
 
         self.frequencies = {}
-
-        self.local_count = float(size * smoothing_value)
-        Corpus.__global_count += self.local_count
-        self.local_score = None
+        self.total_frequencies = float(size * smoothing_value)
+        self.local_count = 0.0
 
     def items(self):
         return self.frequencies.items()
@@ -23,40 +21,30 @@ class Corpus:
     def keys(self):
         return self.frequencies.keys()
 
-    def update(self, item):
-        self.frequencies[item] = self.frequencies.get(item, 0) + 1
+    def update(self, iterator):
+
+        for item in iterator:
+            self.frequencies[item] = self.frequencies.get(item, self.smoothing_value) + 1
+            self.total_frequencies += 1
+
         self.local_count += 1
         Corpus.__global_count += 1
 
-    def update_all(self, iterator):
-        for item in iterator:
-            self.frequencies[item] = self.frequencies.get(item, 0) + 1
-            self.local_count += 1
-            Corpus.__global_count += 1
-
-    def individual_score(self, item):
-        return log((self.smoothing_value + self.frequencies.get(item, 0)) / self.local_count, 10)
-
     def score(self, iterator):
-        if not self.local_score:
-            self.local_score = log(self.local_count / Corpus.__global_count, 10)
-
-        results = self.local_score
+        results = log10(self.local_count / Corpus.__global_count)
         for item in iterator:
-            # todo need to fix this, no smoothing value for non-existing vocabs (not accepted)
-            results += log((self.smoothing_value + self.frequencies.get(item, 0)) / self.local_count, 10)
-
+            results += log10(self.frequencies.get(item, self.smoothing_value) / self.total_frequencies)
         return results
 
     def __iter__(self):
         for key, frequency in self.frequencies.items():
-            yield key, frequency, (frequency + self.smoothing_value) / self.local_count
+            yield key, frequency, (frequency + self.smoothing_value) / self.total_frequencies
 
     def __hash__(self):
         return hash(self.frequencies)
 
     def __len__(self):
-        return int(self.local_count)
+        return int(self.total_frequencies)
 
 
 class CorpusController:
@@ -68,10 +56,10 @@ class CorpusController:
         self.size = size
         self.corpora = {}
         for language in languages:
-            self.corpora[language] = Corpus(self.size, self.smoothing_value, label=language)
+            self.corpora[language] = Corpus(self.size, self.smoothing_value, language)
 
     def train(self, iterator, language):
-        self.corpora[language].update_all(iterator)
+        self.corpora[language].update(iterator)
 
     def classify(self, iterator):
         copies = iter(tee(iterator, len(self.corpora)))
