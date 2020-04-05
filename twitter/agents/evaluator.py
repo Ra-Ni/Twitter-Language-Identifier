@@ -42,15 +42,14 @@ class Evaluator(Agent):
             if not content:
                 continue
 
-            results = database.classify(content[3])
-            score, predicted_language = results
+            score, predicted_label = database.classify(content[3])
 
-            reward = 1 if content[2] == predicted_language else 0
+            reward = 1 if content[2] == predicted_label else 0
 
-            precision[predicted_language][1] += 1
-            precision[predicted_language][0] += reward
+            precision[predicted_label][0] += reward
+            precision[predicted_label][1] += 1
 
-            recall[predicted_language][0] += reward
+            recall[predicted_label][0] += reward
             recall[content[2]][1] += 1
 
             accuracy[0] += reward
@@ -60,7 +59,7 @@ class Evaluator(Agent):
 
             reward = 'correct' if reward == 1 else 'incorrect'
             general_buffer.append('%s  %s  %s  %s  %s' %
-                                  (content[0], predicted_language,
+                                  (content[0], predicted_label,
                                    format(score, '1.2e'),
                                    content[2], reward))
 

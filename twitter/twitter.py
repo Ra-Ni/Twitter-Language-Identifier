@@ -3,8 +3,8 @@ from agents import Evaluator, Trainer
 from envs import CorpusController
 
 if __name__ == '__main__':
-    vocabulary_type = 2
-    ngram_size = 2
+    vocabulary_type = 0
+    ngram_size = 3
     smoothing_value = 0.3
 
     vocabulary = vocabularies.make(vocabulary_type, ngram_size)

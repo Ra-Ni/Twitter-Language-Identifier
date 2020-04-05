@@ -4,7 +4,7 @@ from itertools import tee
 
 
 class Corpus:
-    __global_count = 0.0
+    __global_corpus_frequency = 0.0
 
     def __init__(self, size, smoothing_value, label):
         self.size = size
@@ -13,7 +13,7 @@ class Corpus:
 
         self.frequencies = {}
         self.total_frequencies = float(size * smoothing_value)
-        self.local_count = 0.0
+        self.local_corpus_frequency = 0.0
 
     def items(self):
         return self.frequencies.items()
@@ -27,21 +27,24 @@ class Corpus:
             self.frequencies[item] = self.frequencies.get(item, self.smoothing_value) + 1
             self.total_frequencies += 1
 
-        self.local_count += 1
-        Corpus.__global_count += 1
+        self.local_corpus_frequency += 1
+        Corpus.__global_corpus_frequency += 1
 
     def score(self, iterator):
-        results = log10(self.local_count / Corpus.__global_count)
+        results = log10(self.local_corpus_frequency / Corpus.__global_corpus_frequency)
         for item in iterator:
-            results += log10(self.frequencies.get(item, self.smoothing_value) / self.total_frequencies)
+            try:
+                results += log10(self.frequencies.get(item, self.smoothing_value) / self.total_frequencies)
+            except (ZeroDivisionError, ValueError):
+                results += log10(1e-64)
         return results
 
     def __iter__(self):
         for key, frequency in self.frequencies.items():
-            yield key, frequency, (frequency + self.smoothing_value) / self.total_frequencies
+            yield key, frequency, frequency / self.total_frequencies
 
     def __hash__(self):
-        return hash(self.frequencies)
+        return hash(self.label)
 
     def __len__(self):
         return int(self.total_frequencies)
@@ -49,17 +52,16 @@ class Corpus:
 
 class CorpusController:
 
-    def __init__(self, size, smoothing_value, *languages):
-        super().__init__()
-        self.languages = languages
+    def __init__(self, size, smoothing_value, *labels):
+        self.languages = labels
         self.smoothing_value = smoothing_value
         self.size = size
         self.corpora = {}
-        for language in languages:
-            self.corpora[language] = Corpus(self.size, self.smoothing_value, language)
+        for label in labels:
+            self.corpora[label] = Corpus(self.size, self.smoothing_value, label)
 
-    def train(self, iterator, language):
-        self.corpora[language].update(iterator)
+    def train(self, iterator, label):
+        self.corpora[label].update(iterator)
 
     def classify(self, iterator):
         copies = iter(tee(iterator, len(self.corpora)))
