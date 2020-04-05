@@ -1,25 +1,31 @@
-from re import compile
 import string
 
 from vocabularies import Vocabulary
+
+"""
+Basque:
+Ññ
+
+Catalan:
+ÇçàÀèÈéÉíÍïÏòÒóÓúÚüÜ
+
+Galician:
+ÑñáÁéÉïÏíÍóÓüÜ
+
+Spanish:
+ÁÉÍÓÚÜÑáéíóúüñ¿¡
+
+Portuguese:
+áÁâÂãÃàÀçÇéÉêÊíÍóÓôÔõÕúÚ
+"""
 
 
 class CustomVocabulary(Vocabulary):
 
     def __init__(self, window_size=1):
         super().__init__(window_size)
-        languages = {
-            "basque" : list('Ññ'),
-            "catalan" : list('ÇçàÀèÈéÉíÍïÏòÒóÓúÚüÜ'),
-            "galician" : list('ÑñáÁéÉïÏíÍóÓüÜ'),
-            "spanish" : list('ÁÉÍÓÚÜÑáéíóúüñ¿¡'),
-            "portuguese" : list('áÁâÂãÃàÀçÇéÉêÊíÍóÓôÔõÕúÚ'),
-        }
-
-        self.__pattern = dict.fromkeys(list(string.ascii_letters), 1)
-        for values_list in languages.values():
-            for item in values_list:
-                self.__pattern.setdefault(item, 1)
+        languages = list('ôÔÉÍéüÇÑÒèáàÁÕõÚúÜñã¿íÃòÊÈóêçâ¡ÓïÏÀÂ')
+        self.__pattern = dict.fromkeys(list(string.ascii_letters) + list(languages), None)
 
     def accepts(self, item) -> bool:
         return all(sub_item in self.__pattern for sub_item in item)
