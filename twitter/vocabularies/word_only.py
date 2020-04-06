@@ -3,7 +3,7 @@ from re import sub
 from vocabularies import Vocabulary
 
 
-class NoFilterVocabulary(Vocabulary):
+class WordOnlyVocabulary(Vocabulary):
 
     def filter(self, post):
         post = sub('([@#][^ ]*)|((https?:)[^ ]*)', '', post)

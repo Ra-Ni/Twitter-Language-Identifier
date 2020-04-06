@@ -4,5 +4,5 @@ count = 0
 for codepoint in range(17 * 2 ** 16):
     ch = chr(codepoint)
     if ch.isalpha():
-        count = count + 1
+        count += 1
 print(count)
